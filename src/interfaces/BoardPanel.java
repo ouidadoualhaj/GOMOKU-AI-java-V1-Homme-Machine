@@ -75,10 +75,8 @@ public class BoardPanel extends javax.swing.JPanel {
             }
             k++;
             count = 0;
-            
         }
-        this.repaint();
-       
+        this.repaint();   
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

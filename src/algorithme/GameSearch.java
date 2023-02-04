@@ -22,9 +22,11 @@ public abstract class GameSearch {
     
     public static boolean PROGRAM = false;
     public static boolean HUMAN = true;
-    //spublic static int MoveIndex = 0;
+    public static boolean PLAYER1 = true;
+    public static boolean PLAYER2 = false;
     public static int MoveIndexL=0;
     public static int MoveIndexC=0;
+    private boolean player = true; // true for human, false for program
     
     /**
      *  Notes:  PROGRAM false -1,  HUMAN true 1
@@ -103,14 +105,63 @@ public abstract class GameSearch {
         return v3;
     }
     
+    //-------------la fonction d'aide--------------
+    public void helpGame(Position startingPosition, boolean humanPlayFirst) {
+    	 Vector v = alphaBeta(0, Outils.position, HUMAN);
+         Outils.position = (Position)v.elementAt(1);
+         printPosition(Outils.position);
+        
+         player=PROGRAM;
+         if(player==PROGRAM) {
+          	 Vector v1 = alphaBeta(0, Outils.position, PROGRAM);
+             Outils.position = (Position)v1.elementAt(1);
+             printPosition(Outils.position);
+         }
+         
+         while (true) {
+             if(Outils.gameOver == true)
+            {
+                Graphics2D g2d = (Graphics2D)Home.board.getGraphics();
+                Home.resultValueLbl1.setText("jeu terminé !");
+                Home.saveBtn.setEnabled(false);
+                break;
+            }
+            printPosition(Outils.position);
+            if (wonPosition(Outils.position, PROGRAM)) {
+                System.out.println("Programme gagne ! !");
+                Home.resultValueLbl1.setText("Programme gagne !");
+                break;
+            }
+            System.out.print("\nYour move:");
+            Move move = createMove();
+            printPosition(Outils.position);
+            Outils.position = makeMove(Outils.position, HUMAN, move);
+            
+            if (wonPosition(Outils.position, HUMAN)) {
+                System.out.println("Humain gagne !");
+                Home.resultValueLbl1.setText("Humain gagne !");
+                break;
+            }
+            if (drawnPosition(Outils.position)) {
+                System.out.println("Egalité !");
+                break;
+            }
+            Vector v2 = alphaBeta(0, Outils.position, PROGRAM);     
+  
+            Outils.position = (Position)v2.elementAt(1);  
+            
+        }
     
+    }
     
-    public void playGame(Position startingPosition, boolean humanPlayFirst) {
+    //----------------PlayerToMachine-----------------
+    public void playGame1(Position startingPosition, boolean humanPlayFirst) {
+
         if (humanPlayFirst == false) {
             Vector v = alphaBeta(0, Outils.position, PROGRAM);
-            Outils.position = (Position)v.elementAt(1);   
-        }
-        
+            Outils.position = (Position)v.elementAt(1);
+            
+        } 
         
         while (true) {
              if(Outils.gameOver == true)
@@ -141,14 +192,54 @@ public abstract class GameSearch {
                 break;
             }
 
-            Vector v = alphaBeta(0, Outils.position, PROGRAM);
-            
+            Vector v = alphaBeta(0, Outils.position, PROGRAM);     
             Enumeration enum2 = v.elements();
             while (enum2.hasMoreElements()) {
                 System.out.println(" next element: " + enum2.nextElement());
             }
                    
             Outils.position = (Position)v.elementAt(1);  
+            
+        }
+    }
+    
+    //----------------PlayerToPlayer-----------------
+    public void playGame2(Position startingPosition) {
+    	
+    	 while (true) {
+             if(Outils.gameOver == true)
+            {
+                Graphics2D g2d = (Graphics2D)Home.board.getGraphics();
+                Home.resultValueLbl1.setText("jeu terminé !");
+                Home.saveBtn.setEnabled(false);
+                break;
+            }
+             System.out.print("\nPlayer1 move:");
+             Move move1 = createMove();
+             Outils.position = makeMove(Outils.position, PLAYER1, move1);
+             printPosition(Outils.position);
+             
+             if (wonPosition(Outils.position, PLAYER1)) {
+                System.out.println("Player1 gagne ! !");
+                Home.resultValueLbl1.setText("Player1 gagne !");
+                break;
+            }
+            System.out.print("\nPlayer2 move:");
+            Move move2 = createMove();
+            Outils.position = makeMove(Outils.position, PLAYER2, move2);
+            printPosition(Outils.position);
+
+            
+            if (wonPosition(Outils.position, PLAYER2)) {
+                System.out.println("Player2 gagne !");
+                Home.resultValueLbl1.setText("Player2 gagne !");
+                break;
+            }
+            if (drawnPosition(Outils.position)) {
+                System.out.println("Egalité !");
+                break;
+            }
+     
             
         }
     }

@@ -70,24 +70,25 @@ public class Cellule extends javax.swing.JPanel implements MouseMotionListener, 
         pion = new Pion(color);
         this.repaint();
     }
+
     
     //--------------------
     public void eraseCellule() {
-        pion = null;
         this.repaint();
     }
     
     //-------- paint ----------
     @Override
     public void paint(Graphics g) {
+        
         Graphics2D g2d = (Graphics2D) g;
         super.paint(g2d);
         if(pion != null)
-            pion.dessinerPion((Graphics2D) g);
+           pion.dessinerPion((Graphics2D) g);
         else
         {
             Pion epion = new Pion(new Color(215, 189, 226));
-            epion.dessinerPion((Graphics2D) g);
+                 epion.dessinerPion((Graphics2D) g);
         }
     }
     
@@ -119,7 +120,6 @@ public class Cellule extends javax.swing.JPanel implements MouseMotionListener, 
                     if(x == i && y == j)
                     {
                         Outils.isClicked = true;
-                        //Outils.moveIndex = this.getId();
                         Outils.moveIndexL=this.getIdL();
                         Outils.moveIndexC=this.getIdC();
                         break;

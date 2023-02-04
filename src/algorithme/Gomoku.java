@@ -11,21 +11,25 @@ public class Gomoku extends GameSearch{
     // creer position
  	private GomokuPosition board = new GomokuPosition();
     
+ 	//Niveau de dif
+ 	private int Mdepth= Outils.depth;
  	
     //--------- Fonction : drawnPsoition ------------
     @Override
     public boolean drawnPosition(Position p) {
         if (GameSearch.DEBUG) System.out.println("drawnPosition("+p+")");
-                boolean res = true;
-                GomokuPosition pos = (GomokuPosition)p;
-                for (int i=0; i<19; i++) {
-                	for (int j=0; j<19; j++) {
-                    if (pos.board[i][j] == GomokuPosition.BLANK){
+        boolean res = true;
+        GomokuPosition pos = (GomokuPosition)p;
+        
+              for (int i=0; i<19; i++) {
+                for (int j=0; j<19; j++) {
+                   if (pos.board[i][j] == GomokuPosition.BLANK){
                         res = false;
                         break;
                      }
-                	 }
+                }
               }
+              
                 if (GameSearch.DEBUG) System.out.println("res="+res);
                 return res;
             }    
@@ -36,8 +40,9 @@ public class Gomoku extends GameSearch{
 		public boolean wonPosition(Position p,boolean player) {
 		  if (GameSearch.DEBUG) System.out.println("wonPosition("+p+","+player+")");
 	        boolean res = false;
-	        GomokuPosition pos = (GomokuPosition) p ;  
-	        if (GameSearch.DEBUG) System.out.println("     res="+res);
+	        GomokuPosition pos = (GomokuPosition) p ; 
+	        
+	        if (GameSearch.DEBUG) System.out.println(" res="+res);
 	        return winCheck(player, pos);	 
 		  
 		}
@@ -390,36 +395,34 @@ public class Gomoku extends GameSearch{
     @Override
     public void printPosition(Position p) {
        
-    	   System.out.println("Board position:");
-       
+    	System.out.println("\n Board position:");
         GomokuPosition pos = (GomokuPosition) p;
-        //int count = 0;
+        int count1 = 0;
+        int count2 =0;
         int k = 0;
         int l=0;
-        int h = 0; // HUMAN
-        int pr = 0; // PROGRAM
-      
+        
         for (int row = 0; row < 19; row++) 
         {
             System.out.println();
             l=0;
+            count2=0;
             for (int col = 0; col < 19; col++) 
             {
-                switch (pos.board[row][col]) {
+                switch (pos.board[count1][count2]) {
                     case GomokuPosition.HUMAN:
                         //------- Dessiner le pion noir
                         System.out.print("H");
                         Home.board.getBoard()[k][l].drawPion(Color.black);
                         Home.board.repaint();
-                        h++;
                         break;
                     case GomokuPosition.PROGRAM:
                         //------- Dessiner le pion blanc
                         System.out.print("P");
                         Home.board.getBoard()[k][l].drawPion(Color.white);
                         Home.board.repaint();
-                        pr++;
                         break;
+
                     default:
                         //---- la case est vide
                         System.out.print("o");
@@ -427,24 +430,21 @@ public class Gomoku extends GameSearch{
                         Home.board.repaint();
                         break;
                 }
-                //count++;
+                count2++;
                 l++;
             }
+            count1++;
             k++;
         }
         System.out.println();
-        Home.noirTxt.setText(String.valueOf(h));
-        Home.blancTxt.setText(String.valueOf(pr));
-        h = 0;
-        pr = 0;
-       
+ 
     }
 
 
     //--------- Fonction : possibleMoves ------------
     @Override
     public Position[] possibleMoves(Position p, boolean player) {
-    	 if (GameSearch.DEBUG) System.out.println("posibleMoves("+p+","+player+")");
+    	 if (GameSearch.DEBUG) System.out.println("possibleMoves("+p+","+player+")");
          GomokuPosition pos = (GomokuPosition)p;
          int count = 0;
          for (int i=0; i<19; i++) {
@@ -464,7 +464,8 @@ public class Gomoku extends GameSearch{
                  if (player) pos2.board[i][j] = 1; else pos2.board[i][j] = -1;
                  res[count++] = pos2;
                  if (GameSearch.DEBUG) System.out.println("    "+pos2);
-             }}
+             }
+           }
          }
          return res;
     }
@@ -477,6 +478,7 @@ public class Gomoku extends GameSearch{
         GomokuMove m = (GomokuMove)move;
         GomokuPosition pos = (GomokuPosition)p;
         GomokuPosition pos2 = new  GomokuPosition();
+        
         for (int i=0; i<19; i++) {
         	for(int j=0;j<19;j++) {
         	pos2.board[i][j] = pos.board[i][j];}}
@@ -486,13 +488,13 @@ public class Gomoku extends GameSearch{
         pos2.board[m.moveIndexL][m.moveIndexC]  = pp;
         return pos2;
     }
-
+ 
 
     //--------- Fonction : reachedMaxDepth ------------
     @Override
     public boolean reachedMaxDepth(Position p, int depth) {
         boolean res = false;
-        if(depth>=1) return true;
+        if(depth==Mdepth) return true;
         if (wonPosition(p, false)) 
         	res = true;
         else if (wonPosition(p, true))  
@@ -511,8 +513,6 @@ public class Gomoku extends GameSearch{
     @Override
     public Move createMove() {
     	if (GameSearch.DEBUG) System.out.println("Enter blank square index [0,18]:");
-        int i = 0;
-        int j=0;
         GomokuMove mm = new GomokuMove();
         
         while(Outils.isClicked == false)
@@ -521,7 +521,7 @@ public class Gomoku extends GameSearch{
            
             if(Outils.isClicked == true)
             {
-               System.out.print("Your move i: " + Outils.moveIndexL + "j:" + Outils.moveIndexC);
+               System.out.print(" i:"+ Outils.moveIndexL + " j:"+ Outils.moveIndexC);
                 mm.moveIndexL = Outils.moveIndexL;
                 mm.moveIndexC = Outils.moveIndexC;
                 Outils.isClicked = false;

@@ -9,7 +9,7 @@ public class Outils {
     public static int moveIndexC=0;        //----- la position j de pion ра dessiner (colonne)
     public static int moveIndexL=0;        //----- la position i de pion ра dessiner (ligne)
     public static Position position;
-    public static int depth = 0;           //----- la profendeur
+    public static int depth;           //----- la profendeur
     public static boolean gameOver = false;         //----- Si le joueur depasse le timer, on va retourner True
     public static GomokuPosition lastPosition = new GomokuPosition();
     
